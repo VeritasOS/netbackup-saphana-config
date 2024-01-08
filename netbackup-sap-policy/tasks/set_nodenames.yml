@@ -1,0 +1,8 @@
+- name: NetBackup SAP HANA -> Set nodenames for SAP HA cluster"
+  lineinfile:
+    dest: "{{ sap_nodenames_filename }}"
+    line: "{{ item }}"
+    state: present
+    create: yes
+  with_items: "{{ groups['sap_clients'] }}"
+

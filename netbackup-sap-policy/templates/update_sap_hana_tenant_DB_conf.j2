@@ -1,0 +1,41 @@
+#!/bin/sh
+
+#bcpyrght
+#***************************************************************************
+# $VRTScprght: Copyright 2023 Veritas, All Rights Reserved $ *
+#*************************************************************
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#############################################
+# SAP HANA tenant DB configuration - Update 
+#############################################
+HANA_VIP="{{nbu_client_vip}}"
+
+# Check the NEtBackup Client name is same as SAP HANA Master Name
+CLIENT_NAME="`cat /usr/openv/netbackup/bp.conf | grep "CLIENT_NAME" | cut -f 3 -d ' '`"
+if [ "$CLIENT_NAME" != "$HANA_VIP" ] ; then
+        echo "Client Name is not matched, hence exiting from the other host"
+	exit 0;
+fi
+
+
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}}  -U {{nbu_client_hdb}}  -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'catalog_backup_parameter_file') = '{{utl_script_file_path}}/{{sap_nbu_instance}}/initSAP_{{sap_nbu_instance}}-log.utl'\""
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}} -U {{nbu_client_hdb}} -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'catalog_backup_using_backint') = 'true'\""
+
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}} -U {{nbu_client_hdb}} -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'data_backup_parameter_file') = '{{utl_script_file_path}}/{{sap_nbu_instance}}/initSAP_{{sap_nbu_instance}}-data.utl'\""
+
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}} -U {{nbu_client_hdb}} -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'log_backup_parameter_file') = '{{utl_script_file_path}}/{{sap_nbu_instance}}/initSAP_{{sap_nbu_instance}}-log.utl'\""
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}} -U {{nbu_client_hdb}} -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'log_backup_using_backint') = 'true'\""
+
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}}  -d {{nbu_client_bsl_ten}} -U {{nbu_client_hdb}}  -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'catalog_backup_parameter_file') = '{{utl_script_file_path}}/{{sap_nbu_instance}}/{{nbu_client_bsl_ten}}/initSAP_{{nbu_client_bsl_ten}}-log.utl'\""
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}} -d {{nbu_client_bsl_ten}} -U {{nbu_client_hdb}} -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'catalog_backup_using_backint') = 'true'\""
+
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}} -d {{nbu_client_bsl_ten}} -U {{nbu_client_hdb}} -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'data_backup_parameter_file') = '{{utl_script_file_path}}/{{sap_nbu_instance}}/{{nbu_client_bsl_ten}}/initSAP_{{nbu_client_bsl_ten}}-data.utl'\""
+
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}} -d {{nbu_client_bsl_ten}} -U {{nbu_client_hdb}} -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'log_backup_parameter_file') = '{{utl_script_file_path}}/{{sap_nbu_instance}}/{{nbu_client_bsl_ten}}/initSAP_{{nbu_client_bsl_ten}}-log.utl'\""
+su - {{sap_user}} -c "/usr/sap/{{sap_nbu_instance}}/SYS/exe/hdb/hdbsql -i {{nbu_client_sid}} -d {{nbu_client_bsl_ten}} -U {{nbu_client_hdb}} -j \"ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('backup', 'log_backup_using_backint') = 'true'\""
+

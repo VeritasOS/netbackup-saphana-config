@@ -1,0 +1,14 @@
+- name: NetBackup SAP HANA -> Check if directory exists - Production should fail if not exist
+  file:
+    path: /usr/sap/{{sap_nbu_instance}}/SYS/global/hdb/
+    state: directory
+    mode: '0755'
+
+- name: NetBackup SAP HANA -> Link the NetBackup library script to the SAP /opt directory
+  file:
+    src: /usr/openv/netbackup/bin/hdbbackint_script
+    dest: /usr/sap/{{sap_nbu_instance}}/SYS/global/hdb/opt/hdbbackint
+    mode: '0777'
+    state: link
+  become: true
+
