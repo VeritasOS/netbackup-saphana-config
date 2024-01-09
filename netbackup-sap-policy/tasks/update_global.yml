@@ -1,3 +1,0 @@
-- name: NetBackup SAP HANA -> Modify the SAP HANA global.ini->backup->data_backup_parameter_file for tenant-DB - Production should fail
-  command: "{{utl_script_file_path}}/{{sap_nbu_instance}}/update_sap_hana_{{sap_nbu_instance}}_parameters.sh"
-
