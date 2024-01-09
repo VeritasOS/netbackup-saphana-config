@@ -1,0 +1,23 @@
+- name: -> NBU - Create sap backup policy
+  uri:
+          #url: https://{{ groups['master_servers'][0] }}:1556/netbackup/config/policies/
+    url: https://{{ master_server }}:1556/netbackup/config/policies/
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"    
+      X-NetBackup-Policy-Use-Generic-Schema: true
+      #body: "{{ lookup('template', 'create_policy_sap.j2') }}"
+    body: "{{ lookup('template', '{{ item.value.policy_temp}}') }}"
+    body_format: json
+    validate_certs: False
+    status_code:
+      - 204
+      - 400
+      - 401
+      - 409
+      - 415
+      - 500
+      - 501
+  register: create_sap_backup_policy
+  with_dict: '{{ policy_list }}'

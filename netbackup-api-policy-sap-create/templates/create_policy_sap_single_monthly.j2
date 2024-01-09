@@ -1,0 +1,166 @@
+{
+  "data": {
+    "type": "policy",
+    "id": "{{ item.value.name }}",
+    "attributes": {
+        "policy": {
+            "policyName": "{{ item.value.name }}",
+            "policyType": "SAP",
+            "policyAttributes": {
+                "active": true,
+                "autoManagedLabel": null,
+                "autoManagedType": 0,
+                "blockIncremental": false,
+                "dataClassification": null,
+                "effectiveDateUTC": "1970-01-01T00:00:00Z",
+                "jobLimit": 2147483647,
+                "keyword": null,
+                "mediaOwner": "*ANY*",
+                "priority": 0,
+                "storage": "{{ msdp_dp_stu }}",
+                "storageIsSLP": false,
+                "useMultipleDataStreams": false,
+                "volumePool": "NetBackup"
+            },
+            "clients": [
+               {% for line in nbu_clients %}
+                     {
+                        "hardware": "Linux",
+                        "hostName": "{{ line.client }}",
+                        "OS": "Windows2016"
+                     }
+                  {% if not loop.last%},
+                  {% endif %}
+              {% endfor %}
+            ],
+            "schedules": [
+                {
+                    "backupCopies": {
+                        "copies": [
+                            {
+                                "retentionLevel": 9,
+                                "mediaOwner": null,
+                                "retentionPeriod": {
+                                    "value": -1,
+                                    "unit": "INFINITE"
+                                },
+                                "storage": null,
+                                "volumePool": null
+                            }
+                        ],
+                        "priority": -1
+                    },
+                    "backupType": "Application Backup",
+                    "excludeDates": {
+                        "lastDayOfMonth": false,
+                        "recurringDaysOfMonth": [],
+                        "recurringDaysOfWeek": [],
+                        "specificDates": []
+                    },
+                    "frequencySeconds": 604800,
+                    "includeDates": {
+                        "lastDayOfMonth": false,
+                        "recurringDaysOfMonth": [],
+                        "recurringDaysOfWeek": [],
+                        "specificDates": []
+                    },
+                    "mediaMultiplexing": 1,
+                    "retriesAllowedAfterRunDay": false,
+                    "scheduleName": "Default-Application-Backup",
+                    "scheduleType": "Frequency",
+                    "snapshotOnly": false,
+                    "startWindow": [
+                        {
+                            "dayOfWeek": 1,
+                            "startSeconds": 0,
+                            "durationSeconds": 86400
+                        },
+                        {
+                            "dayOfWeek": 2,
+                            "startSeconds": 0,
+                            "durationSeconds": 86400
+                        },
+                        {
+                            "dayOfWeek": 3,
+                            "startSeconds": 0,
+                            "durationSeconds": 86400
+                        },
+                        {
+                            "dayOfWeek": 4,
+                            "startSeconds": 0,
+                            "durationSeconds": 86400
+                        },
+                        {
+                            "dayOfWeek": 5,
+                            "startSeconds": 0,
+                            "durationSeconds": 86400
+                        },
+                        {
+                            "dayOfWeek": 6,
+                            "startSeconds": 0,
+                            "durationSeconds": 86400
+                        },
+                        {
+                            "dayOfWeek": 7,
+                            "startSeconds": 0,
+                            "durationSeconds": 86400
+                        }
+                    ],
+                    "storageIsSLP": false,
+                    "syntheticBackup": false
+                },
+                {
+                    "backupCopies": {
+                        "copies": [
+                            {
+                                "failStrategy": null,
+                                "mediaOwner": null,
+                                "retentionPeriod": {
+                                    "value": 2,
+                                    "unit": "WEEKS"
+                                },
+                                "storage": null,
+                                "volumePool": null
+                            }
+                        ],
+                        "priority": -1
+                    },
+                    "backupType": "Automatic Backup",
+                    "excludeDates": {
+                        "lastDayOfMonth": false,
+                        "recurringDaysOfMonth": [],
+                        "recurringDaysOfWeek": [],
+                        "specificDates": []
+                    },
+                    "frequencySeconds": 604800,
+                    "includeDates": {
+                        "lastDayOfMonth": false,
+                        "recurringDaysOfMonth": [],
+                        "recurringDaysOfWeek": [],
+                        "specificDates": []
+                    },
+                    "mediaMultiplexing": 1,
+                    "retriesAllowedAfterRunDay": false,
+                    "scheduleName": "rt_sap_db_monthly",
+                    "scheduleType": "Frequency",
+                    "snapshotOnly": false,
+                    "startWindow": [
+                        {
+                            "dayOfWeek": 1,
+                            "startSeconds": 10800,
+                            "durationSeconds": 14399
+                        }
+                    ],
+                    "storageIsSLP": false,
+                    "syntheticBackup": false
+                }
+            ],
+            "backupSelections": {
+                "selections": [
+                    "{{ item.value.backupselection }}"
+                ]
+            }
+        }
+    }
+  }
+}

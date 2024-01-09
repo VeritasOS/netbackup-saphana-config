@@ -1,0 +1,20 @@
+- name: NetBackup -> Get API authorisation token
+  uri:
+    url: "{{ base_api_url + 'login' }}"
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_content_type }}"
+    body:
+      userName: "{{ nbu_username }}"
+      password: "{{ nbu_password }}"
+    body_format: json
+    status_code: 201, 401
+    validate_certs: no
+  register: task_nbu_get_auth_token_result
+  retries: 5
+  delay: 2
+  until:  task_nbu_get_auth_token_result.status == 201
+  tags:
+    - get_api_token
+
+
