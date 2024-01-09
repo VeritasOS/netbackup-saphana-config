@@ -1,6 +1,6 @@
-#netbackup-saphana-config
+# netbackup-saphana-config
 
-##Description
+## Description
 
 Veritas NetBackup SAP HANA Agent integrates the SAP HANA backint interface.
 The SAP HANA backup and recovery management capabilities are provided by NetBackup. 
@@ -12,16 +12,21 @@ To protect SAP HANA following configurations are required.
     5. Configure parameter files (utl) for SAP HANA data, log and catalog backups. 
     6. Create the backup scripts for Instance and tenant-DB
  
-##Assumptions
+## Assumptions
 	1. To utilize this role, in-depth knowledge of both Veritas NetBackup and Ansible is required.
 	2. All the NetBackup Primary/Media servers and Client (SAP HANA systems) should be accessible from the ansible host.
 
-##How to use this project
+## How to use this project
 	1. Clone the repository from GitHub and move to your Ansible Control Host:
 		git clone http://www.GitHub/netbackup-saphana-config.git
 	2. Modify the sample_playbook_netbackup_sap_hana_config.yml file according to the SAP HANA environment
 	3. Run the following command to run the playbook
-		# ansible-playbook playbook_netbackup_sap_hana_config.yml -i inventory/hosts.yml
+		#ansible-playbook playbook_netbackup_sap_hana_config.yml -i inventory/hosts.yml
+		Note: The "inventory/hosts.yml" file should have following entries:
+			#cat inventory/hosts.yml
+			localhost ansible_host=localhost ansible_connection=local
+			[sap_clients]
+			<host_name> ansible_host=<host_ip>
 
 # License
 
