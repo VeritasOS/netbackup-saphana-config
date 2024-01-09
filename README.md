@@ -4,7 +4,7 @@
 
 Veritas NetBackup SAP HANA Agent integrates the SAP HANA backint interface.
 The SAP HANA backup and recovery management capabilities are provided by NetBackup. 
-To protect SAP HANA following configurations are required.
+## To protect SAP HANA following configurations are required:
     1. Create hdbbackint softlink from /usr/sap/<SID>/SYS/global/hdb/opt/hdbbackint to /usr/openv/NetBackup/bin/hdbbackint_script
     2. Create NetBackup policies with retention daily, weekly, monthly.
     3. Create the parameter files (utl)
